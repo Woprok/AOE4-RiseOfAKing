@@ -1,0 +1,403 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp2_dinan_intro_cameraspline.spline")  
+-- import("sal_chp2_dinan_outro_shot01.spline")  
+-- import("sal_chp2_dinan_outro_shot02.spline")  
+-- import("sal_chp2_dinan_outro_shot03.spline")  
+import("sal_chp2_dinan.scar")  
+import("obj_expand.scar") 
+
+sal_chp2_dinan_intro =  
+{
+	degree = 2,
+	duration = 15.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09751,
+	num_cvs = 3,
+	positions =  
+	{
+		-16.77153,
+		46.38756,
+		-192.38251,
+		-72.31273,
+		54.00242,
+		-202.59103,
+		-78.00652,
+		61.61729,
+		-167.27322,
+	},
+	rotations =  
+	{
+		-36.59527,
+		-10.17612,
+		-40.66481,
+		-26.44867,
+		-45.00000,
+		-44.99998,
+	},
+}
+
+Shot01 =  
+{
+	degree = 1,
+	duration = 15.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.10000,
+	num_cvs = 2,
+	positions =  
+	{
+		83.79155,
+		54.73461,
+		100.56838,
+		91.59280,
+		48.33907,
+		133.70464,
+	},
+	rotations =  
+	{
+		-43.46264,
+		-117.91883,
+		-43.83320,
+		-72.96184,
+	},
+}
+
+Shot02 =  
+{
+	degree = 2,
+	duration = 35.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.10000,
+	num_cvs = 4,
+	positions =  
+	{
+		140.82733,
+		52.88729,
+		43.88549,
+		104.29074,
+		39.97440,
+		35.30392,
+		78.32420,
+		31.91362,
+		67.78518,
+		82.85625,
+		29.75054,
+		90.65124,
+	},
+	rotations =  
+	{
+		-42.68443,
+		31.95671,
+		-42.00760,
+		14.86850,
+		-41.33788,
+		-40.84927,
+		-40.01862,
+		-107.33605,
+	},
+}
+
+Shot03 =  
+{
+	degree = 2,
+	duration = 15.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.10000,
+	num_cvs = 3,
+	positions =  
+	{
+		80.96848,
+		27.69560,
+		113.44472,
+		100.76022,
+		41.30606,
+		139.06801,
+		108.05935,
+		55.18025,
+		131.16786,
+	},
+	rotations =  
+	{
+		-35.94492,
+		-154.94112,
+		-39.18299,
+		-196.25642,
+		-42.57822,
+		-242.79684,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.Dinan_Intro = function()
+   	
+	--Set Music Intensity
+	Music_LockIntensity(MUSIC_EXPLORE)
+	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO, nil, nil, true)
+		
+	-- Ready & Start the Spline
+	Util_AdjustCaptureCameraPanToEndAtDefault(sal_chp2_dinan_intro)
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp2_dinan_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("sfx_stem_campaign_1065_dinan_intro_play")
+	
+	
+	    MissionOMatic_ShowTitleCard()
+	
+	    -- Wait for title card
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231630") --It was time to build an army. Mathilde had everything she needed to amass a force capable of bringing down the walls of Dinan.
+   		CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+
+	-- Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	Sound_Play2D("sfx_stem_campaign_1065_dinan_intro_stop")
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1065_dinan_intro_stop")
+
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.Dinan_Outro = function()
+   	
+	--////////  SETUP  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	--Set Outro Music Intensity
+	Music_LockIntensity(MUSIC_RARE)
+	
+	-- Fade out from gameplay
+	Game_FadeToBlack(FADE_OUT, 2)
+	Sound_Play2D("mix_nis_shared_fade_out_play")
+	
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	-- Reveal Fog of War for the Intro camera
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("outro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_OUTRO)
+	
+	Spawn_Corpses()
+	Destroy_Buildings()
+	
+	-- Wait for Corpse Spawn
+	CTRL.Event_Delay(1.5)
+	CTRL.WAIT()
+
+    --////////  SHOT 01  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	Camera_Push("camera_spline_clip")
+	local time = Camera_ExecuteCaptureCameraPan(Shot02)
+	
+	Shot_01()
+	Shot_02()
+	
+	CTRL.Event_Delay(time) -- Duration: 30
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("mix_nis_shared_fade_in_play")
+		Sound_Play2D("sfx_stem_campaign_1065_dinan_outro_play")
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231639") --Brittany was no longer a threat. Mathilde's administrative expertise had once again proved essential to Guillaume's strength. Harold was rewarded with arms, men and even a knighthood. According to Norman historians, it was here that Harold swore on holy relics to support Guillaume in his claim to the English throne. An oath sworn was a form of contract, recognised by law and church. Breaking one sworn upon upon a holy relic would be like breaking a contract with God and thus have dire consequences.
+   		CTRL.WAIT()
+	
+	    CTRL.Game_FadeToBlack(FADE_OUT, 1)	
+	    CTRL.WAIT()	
+		Sound_Play2D("mix_nis_shared_fade_out_play")
+	CTRL.END()
+	CTRL.WAIT()
+	
+	Camera_Pop()
+	
+	--////////  SHOT 02  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Camera_Push("camera_spline")
+	
+	local time02 = 0
+    if Event_IsBeingSkipped() == false or final_shot == false then
+        time02 = Camera_ExecuteCaptureCameraPan(Shot03)
+    end
+	
+	Shot_03()
+	
+	CTRL.Event_Delay(time02) -- Duration: 17
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("mix_nis_shared_fade_in_play")
+	
+	    CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231640") --For now, it appeared that Guillaume had formed a strong alliance. However, it would not take long for it to lay in tatters. Guillaume and Harold would come to clash at one of the most infamous battles in history.
+   		CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	Sound_Play2D("sfx_stem_campaign_1065_dinan_outro_stop")
+	
+	--////////  CLEAN UP  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	-- UnReveal Fog of War
+	Util_EnableCardinalCinematicMode (false, CAM_OUTRO)
+	
+	if Event_IsBeingSkipped() then
+		
+		Sound_Play2D("sfx_stem_campaign_1065_dinan_outro_stop")
+		
+		if final_shot == false then
+			final_shot = true
+		end
+    end
+
+end
+
+-- ///// Spearmen //////////////////////////////////////////////
+EVENTS.BuildBarracksStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231631") -- Mathilde was aware of Conan’s powerful Horsemen. She knew Spearmen would prove to be a useful counter. They would make up the core of her army.
+	CTRL.WAIT()
+end
+
+-- ///// Cavalry //////////////////////////////////////////////
+EVENTS.BuildStablesStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231632") -- Mathilde then turned her attention to producing her own horsemen. A particular strength of the Normans
+	CTRL.WAIT()
+	
+end
+
+-- ///// Archers //////////////////////////////////////////////
+EVENTS.BuildArcheryStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231633") -- With the Horsemen saddled and ready for war, Mathilde was confident they would be able to deal with any archer threat that may appear. Archers would be a useful tool to have in her own army, so Mathilde began the production of skilled bowmen.
+	CTRL.WAIT()	
+end
+
+-- ///// Capture //////////////////////////////////////////////
+EVENTS.CaptureStart = function()
+	
+	-- Unlock path to Dinan
+	World_SetInteractionStage(1)
+	SpawnEnemies()
+	Setup_SetPlayerName(player1, "$999292") -- Guillaume de Normandie
+	
+	-- Spawn in William, Harold & forces
+	sg_scouts = SGroup_CreateIfNotFound("sg_scouts")
+	
+	sg_william = SGroup_CreateIfNotFound("sg_william")
+	sg_harold = SGroup_CreateIfNotFound("sg_harold")
+	UnitEntry_DeploySquads(player1, {sg_scouts, sg_william}, {{sbp = SBP.CAMPAIGN.UNIT_DUKE_WILLIAM_CMP_SAL, numSquads = 1}}, mkr_william_arrival)
+	UnitEntry_DeploySquads(player1, {sg_scouts, sg_harold}, {{sbp = SBP.ENGLISH.UNIT_EARL_HAROLD_CMP_ENG, numSquads = 1}}, mkr_william_arrival)
+	Entity_SetInvulnerableMinCap(Squad_GetFirstEntity(SGroup_GetSquadAt(sg_scouts, 1)), 0.75, -1)
+	Entity_SetInvulnerableMinCap(Squad_GetFirstEntity(SGroup_GetSquadAt(sg_scouts, 2)), 0.75, -1)
+	
+	sg_william_horsemen = SGroup_CreateIfNotFound("sg_william_horsemen")
+	sg_harold_spearmen = SGroup_CreateIfNotFound("sg_harold_spearmen")
+	UnitEntry_DeploySquads(player1, {sg_scouts, sg_harold_spearmen}, {{type = "scar_spearman", numSquads = 10}}, mkr_william_arrival)
+	UnitEntry_DeploySquads(player1, {sg_scouts, sg_william_horsemen}, {{type = "scar_horseman", numSquads = 5}}, mkr_william_arrival)
+	
+	SGroup_EnableLeaderCrown(sg_william, true)
+	
+	-- Get them moving
+	Cmd_FormationMove(sg_scouts, mkr_william_target01)
+	Cmd_FormationMove(sg_scouts, mkr_william_target02, true)
+	Cmd_FormationMove(sg_scouts, mkr_william_target03, true)
+
+	-- Wait a beat
+	CTRL.Event_Delay(1)
+	CTRL.WAIT()
+	
+	-- Call to Action banner alert
+	EventCues_CallToAction("$11202439", CTA_UNIQUE_CHANGE, nil, nil, sg_william, 10)
+	
+	CTRL.Event_Delay(4)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231609") -- Guillaume was accompanied by an unusual ally, the powerful Anglo-Saxon Earl, Harold Godwinson. 
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231636") -- They were met with a sprawling town and mighty army. Mathilde had done her job as duchess flawlessly, something Guillaume was very much used to. She would remain behind and efficiently run the settlement while Guillaume marched against Conan.
+	CTRL.WAIT()
+	
+	RevealFOW()
+	
+end
+	
+function RevealFOW()
+	--Reveal the areas
+	FOW_RevealMarker(mkr_dinan_fow_reveal_01, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_02, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_03, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_04, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_05, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_06, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_07, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_08, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_09, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_10, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_11, 0)
+	FOW_RevealMarker(mkr_dinan_fow_reveal_12, 0)
+end
+
+EVENTS.SelectedWholeArmy = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231637") -- Guillaume knew this would not be an easy siege but was confident in his forces and his own abilities as a leader. Guillaume and Harold set off to the castle of Dinan.
+	CTRL.WAIT()	
+end
+
+EVENTS.DestroyStart = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231638") -- This was the Château de Dinan, Conan’s stronghold in Britany. With its capture, Brittany would never be in a position to threaten Normandy again. To capture it, Guillaume needed to seize Conan who had barricaded himself inside the keep atop the hill. He sounded the charge and laid siege to the keep.
+	CTRL.WAIT()
+end
+
+EVENTS.SOBJ_HorsemenRaid_DelayedStart = function()
+	
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	Objective_Start(SOBJ_HorsemenRaid, false, true)
+	
+end
+
+EVENTS.SOBJ_ArchersRaid_DelayedStart = function()
+	
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	Objective_Start(SOBJ_ArchersRaid, false, true)
+	
+end

@@ -1,0 +1,141 @@
+HeaderInfo =  
+{
+	ScenarioDescription = "$999312",
+	ScenarioDescriptionlong = "$999312",
+	audio_river_detection_enabled = true,
+	has_scripted_ai = true,
+	mapsize =  
+	{
+		512,
+		512,
+	},
+	point_positions =  
+	{
+		 
+		{
+			ebp_name = "starting_position_no_town_center",
+			owner_id = 1003,
+			x = -44.00653,
+			y = -133.27321,
+		},
+		 
+		{
+			ebp_name = "starting_position_no_town_center",
+			owner_id = 1002,
+			x = -44.00653,
+			y = -133.27321,
+		},
+		 
+		{
+			ebp_name = "starting_position_no_town_center",
+			owner_id = 1000,
+			x = -44.00653,
+			y = -133.27321,
+		},
+		 
+		{
+			ebp_name = "starting_position_no_town_center",
+			owner_id = 1001,
+			x = -44.00653,
+			y = -133.27321,
+		},
+	},
+	scenario_type = 1,
+	scenarioabbrname = "$999765",
+	scenarioname = "$999765",
+	slots =  
+	{
+		 
+		{
+			do_not_randomize = true,
+			flags = 4294967169,
+			paint_scheme = "role_player",
+			race = "french",
+			startingConditions = "dark_age_start",
+			status = 0,
+			team = 0,
+		},
+		 
+		{
+			do_not_randomize = true,
+			flags = 4294967169,
+			paint_scheme = "role_enemy1",
+			race = "french",
+			status = 2,
+			team = 1,
+		},
+		 
+		{
+			do_not_randomize = true,
+			flags = 4294967169,
+			paint_scheme = "role_neutral",
+			race = "french",
+			status = 2,
+			team = 2,
+		},
+		 
+		{
+			do_not_randomize = true,
+			flags = 4294967169,
+			race = "english",
+			status = 2,
+			team = 3,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+		 
+		{
+			status = 1,
+		},
+	},
+	start_location = 1,
+	stylized_minimap_enabled = true,
+	stylized_minimap_pipeline_path = "cardinal_base_minimap",
+	version = 3002,
+	visible_in_lobby = true,
+	win_condition = "no_win_condition",
+	worldbp = "default",
+}
+

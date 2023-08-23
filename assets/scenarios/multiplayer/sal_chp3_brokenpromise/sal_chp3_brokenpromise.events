@@ -1,0 +1,343 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp3_brokenpromise_intro_cameraspline.spline")  
+-- import("sal_chp3_brokenpromise_outro_cameraspline.spline")  
+import("sal_chp3_brokenpromise.scar")  
+
+sal_chp3_brokenpromise_outro =  
+{
+	degree = 2,
+	duration = 20.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 30.00000,
+	num_cvs = 3,
+	positions =  
+	{
+		329.59393,
+		59.04563,
+		120.48606,
+		334.11090,
+		63.76470,
+		154.89417,
+		348.43494,
+		68.48376,
+		184.68909,
+	},
+	rotations =  
+	{
+		-39.29523,
+		35.51212,
+		-40.28384,
+		28.01521,
+		-41.28711,
+		20.29267,
+	},
+}
+
+sal_chp3_brokenpromise_intro =  
+{
+	degree = 2,
+	duration = 21.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09749,
+	num_cvs = 3,
+	positions =  
+	{
+		-221.90553,
+		43.08082,
+		-372.56082,
+		-226.48473,
+		65.85948,
+		-315.69586,
+		-213.35669,
+		67.47555,
+		-299.31564,
+	},
+	rotations =  
+	{
+		-38.74580,
+		-53.03079,
+		-45.16199,
+		-43.16327,
+		-45.00001,
+		-45.00000,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.BrokenPromise_Intro = function()
+   	
+	--Set Music Intensity
+	Music_LockIntensity(MUSIC_EXPLORE)
+	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO, nil, nil, true)
+		
+	-- Ready & Start the Spline
+	Util_AdjustCaptureCameraPanToEndAtDefault(sal_chp3_brokenpromise_intro)
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp3_brokenpromise_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    Spawn_Intro()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+	    CTRL.Event_Delay(1)
+		Sound_Play2D("sfx_stem_campaign_1066_invasion_intro_play")
+		CTRL.WAIT()
+	
+	    MissionOMatic_ShowTitleCard()
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231641") --It is January 5th 1066 and Edward the Confessor, King of England, is dead.
+	    CTRL.WAIT()
+	
+	    CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231642") --Harold Godwinson, Earl of Wessex, is elected King of England the following day by the Witan. Harold also claimed that Edward named him his successor upon his deathbed.
+	    CTRL.WAIT()
+	
+	    Reset_Intro()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	-- Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	Sound_Play2D("sfx_stem_campaign_1066_invasion_intro_stop")
+	
+	Util_StartIntel(EVENTS.Build2DocksStart)
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1066_invasion_intro_stop")
+
+		Skip_Intro()
+		
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.BrokenPromise_Outro = function()
+   	
+	--Set Outro Music Intensity
+	Music_LockIntensity(MUSIC_TENSE_COMBAT_RARE)
+	
+	-- Fade out from gameplay
+	Game_FadeToBlack(FADE_OUT, 2)
+	Sound_Play2D("mix_nis_shared_fade_out_play")
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	-- Destroy Structures and wait for physics
+	Destroy_Hastings_Outro()
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("outro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_OUTRO)
+		
+	-- Ready & Start the Spline
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp3_brokenpromise_outro)
+	
+	-- Outro Scene Init
+	HastingsSideSwitch_Outro()
+	WilliamMove_Outro()
+	Spawn_Outro()
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("mix_nis_shared_fade_in_play")
+	    CTRL.Event_Delay(1)
+		Sound_Play2D("sfx_stem_campaign_1066_invasion_outro_play")
+	    CTRL.WAIT()
+	
+	    RestoreHastings_Outro()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231656") --Guillaume now had a foothold in England. From here, he would have time to secure his location and resupply his forces before marching north and meeting Harold in battle. It would be at Senlac Hill that Guillaume, Duke of Normandy, would come to be forever known as William the Conqueror
+	    CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	Sound_Play2D("sfx_stem_campaign_1066_invasion_outro_stop")
+	
+	-- Undo 'Cinematic Mode'
+	Util_EnableCardinalCinematicMode (false, CAM_OUTRO)
+	
+	
+	-- Clean up for skipping if needed
+	if Event_IsBeingSkipped() and outro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1066_invasion_outro_stop")
+
+		outro_skipped = true
+	end
+
+end
+
+-- ///// Gather //////////////////////////////////////////////
+EVENTS.GatherStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "He set about converting this small town into an economic stronghold.")
+	CTRL.WAIT()
+	
+end
+EVENTS.GatherWoodStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.GatherGoldStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+
+-- ///// AgeUp //////////////////////////////////////////////
+EVENTS.AgeUpStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "Norman scouts returning from England informed Guillaume that the Saxon army was positioned along the South Coast.")
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "Guillaume decided to delay the invasion until he could make an unopposed landing. He thus continued his preparations.")
+	CTRL.WAIT()
+	
+end
+
+-- ///// BuildInvasionForce //////////////////////////////////////////////
+EVENTS.Build2BarracksStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "With the economy up and running, Guillaume turned his attention to constructing the key buildings needed for his army.")
+	CTRL.WAIT()
+	
+end
+EVENTS.Build2ArcheryStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.Build2StablesStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.Make40SpearmenStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "With the key infrastructure now constructed, William turned his attention to gathering his forces.")
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "He would need a huge invasion force to take on the full might of England.")
+	CTRL.WAIT()
+	
+end
+EVENTS.Make30HorsemenStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.Make30ArchersStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+
+-- ///// BuildFleet //////////////////////////////////////////////
+EVENTS.Build2DocksStart = function()
+		
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231643") --For Guillaume, this was an absolute betrayal. He believed the throne of England was his by right.
+	
+end
+EVENTS.Build2DocksObjectiveStarted = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231651") --He needed to ferry a massive army, with their supplies, armour, weapons and horses across the body of water now known as the English Channel. He began construction of a dockyard capable of building him his fleet.
+	CTRL.WAIT()
+	
+end
+EVENTS.Build10TransportShipsStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.LoadTroops = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231652") --With his fleet built, Guillaume set about the momentous task of loading his forces into his fleet.
+	CTRL.WAIT()
+	
+end
+
+-- ///// BeginInvasion //////////////////////////////////////////////
+EVENTS.SetSailStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231653") -- With the winds now more favourable and reports of Harold’s army marching North to fight off a Viking threat, Guillaume was finally ready to launch his invasion. He plotted his course and set sail for England.
+	CTRL.WAIT()
+	
+end
+EVENTS.SetSailComplete = function()
+		
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231644") -- Norman historians tell us Guillaume received consent for the invasion from Pope Alexander II, thus making a conquest of England a holy mission.
+	CTRL.WAIT()
+end
+EVENTS.UnloadArmyStart = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231654") -- Guillaume would land at the old Roman fort of Pevensey. The Anglo-Saxons had taken up residence inside but they would prove no match for Guillaume’s trained soldiers. He landed his forces and took the settlement.
+	CTRL.WAIT()
+	
+end
+EVENTS.TakePevenseyStart = function()
+	
+end
+EVENTS.PevenseyTaken = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231655") -- With Pevensey now under his control, Guillaume marched on the nearby town of Hastings. From there he would resupply his forces and wait for word of Harold and his army.
+	CTRL.WAIT()
+	
+end
+
+-- ///// TakeHastings //////////////////////////////////////////////
+EVENTS.MarchHastingsStart = function()
+end
+EVENTS.TakeHastingsStart = function()
+
+	CTRL.Event_Delay(0.5)
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11235151") -- The promise of land and riches in England had spread far and wide. Knights and mercenaries alike flocked to Guillaume's cause in the hopes of attaining great rewards, a large number arriving from the recently subdued Brittany.
+	CTRL.WAIT()
+	
+end
+EVENTS.ClearAngloSaxonsStart = function()
+
+	
+end
+EVENTS.DestroyTCStart = function()
+
+end

@@ -1,0 +1,343 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp1_valesdun_intro_cameraspline.spline")  
+-- import("sal_chp1_valesdun_outro_cameraspline.spline")  
+import("sal_chp1_valesdun.scar")  
+
+sal_chp1_valesdun_intro =  
+{
+	degree = 2,
+	duration = 15.87500,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09752,
+	num_cvs = 3,
+	positions =  
+	{
+		-128.49879,
+		32.80132,
+		-66.13884,
+		-174.57094,
+		25.36511,
+		-73.40166,
+		-150.71919,
+		60.67467,
+		-137.83318,
+	},
+	rotations =  
+	{
+		-37.31343,
+		-163.73351,
+		-33.79063,
+		-145.72037,
+		-45.00000,
+		-44.99998,
+	},
+}
+
+sal_chp1_valesdun_outro =  
+{
+	degree = 2,
+	duration = 25.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 42.80095,
+	num_cvs = 3,
+	positions =  
+	{
+		-21.33172,
+		26.03590,
+		179.92149,
+		-1.31846,
+		26.46071,
+		206.40591,
+		39.37701,
+		27.44858,
+		151.67671,
+	},
+	rotations =  
+	{
+		-34.49409,
+		-170.15010,
+		-36.09238,
+		-184.33766,
+		-37.55162,
+		-213.30690,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.ValesDunes_Intro = function()
+   	
+	
+	Music_UnlockIntensity()
+	
+	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Game_SetVisibility(VF_XboxUI, false)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO, nil, nil, true)
+		
+	-- Ready & Start the Spline
+	Util_AdjustCaptureCameraPanToEndAtDefault(sal_chp1_valesdun_intro)
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp1_valesdun_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_intro_play")
+	
+	    MissionOMatic_ShowTitleCard()
+	
+	    -- Wait for title card
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231586") --With his spearmen found, Guillaume was one step closer to reclaiming his dukedom. First, he would need to organize them under his command, only then could he continue his search for the rest of his forces.
+   		CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	-- Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_intro_stop")
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_intro_stop")
+
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.ValesDunes_Outro = function()
+   	
+	Music_LockIntensity(MUSIC_TENSE_COMBAT) --Set Outro Music Intensity
+	
+	-- Fade out from gameplay
+	Game_FadeToBlack(FADE_OUT, 2)
+	
+	
+	-- Half second wait on black screen
+	CTRL.Event_Delay(2.5)
+	CTRL.WAIT()
+	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("outro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_OUTRO)
+		
+	-- Ready & Start the Spline
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp1_valesdun_outro)
+	
+	-- Outro Scene Prep
+	SpawnOutro()
+	InitOutro()
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    Game_FadeToBlack(FADE_IN, 1)
+		Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_outro_play")
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231606") --With his forces depleted, Gui de Brionne was utterly defeated and fled. It was said that the dead were so numerous, they floated downstream and clogged the local waterwheel.
+   		CTRL.WAIT()
+	
+	    OutroPart2()
+	
+	    --CTRL.Actor_PlaySpeech(ACTOR.NARR, "It is said that the bodies of those that had fallen were so numerous that they floated downstream and clogged a local waterwheel.")
+   		--CTRL.WAIT()
+	
+	    OutroPart3()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231607") --It was this victory at Val-ès-Dunes where Guillaume first displayed his militaristic genius and demonstrated his fighting prowess. It was here that he established himself as the undisputed Duke of Normandy.
+   		CTRL.WAIT()
+	
+	    --CTRL.Actor_PlaySpeech(ACTOR.NARR, "It was here that he established himself as the undisputed Duke of Normandy.")
+   		--CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+		Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_outro_stop")
+	
+	-- Undo 'Cinematic Mode'
+	Util_EnableCardinalCinematicMode (false, CAM_OUTRO)
+	
+	-- Clean up for skipping if needed
+	if Event_IsBeingSkipped() and outro_skipped == false then
+		Sound_Play2D("sfx_stem_campaign_1047_val_es_dunes_outro_stop")
+
+		outro_skipped = true
+	end
+
+end
+
+-- ///// OrganiseSpearmen //////////////////////////////////////////////
+EVENTS.SelectSpearmenStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231587") --He gathered his spearmen and coordinated them into proper rank and file.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.CreateRegimentStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231588") --Guillaume knew that his men would need to follow his every command in the coming battle, and so he assigned them as a group under his control.
+	CTRL.WAIT()
+	
+end
+
+-- ///// MusterForces /////////////////////////////////////////////////
+EVENTS.SelectAllStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231589") --Guillaume’s spearmen were now a respectable fighting unit. It was time to march on in search of more reinforcements.
+	CTRL.WAIT()
+
+	
+end
+
+EVENTS.SearchStart = function()
+	
+	
+end
+
+EVENTS.DestroyPalisadeStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231591") --Guillaume’s cousin and treacherous rebel, Gui de Bourgogne, had erected a wooden palisade along the path in an attempt to halt Guillaume’s progress. However, this was no problem for his spearmen who burned it down with ease.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.DefeatHorsemanStart = function()
+
+	CTRL.Event_Delay(3)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231592") --An enemy patrol had been scouting the area. Guillaume knew that his Spearmen were the perfect counter and saw this as a perfect opportunity to test their mettle.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.FollowMarkersStart = function()
+
+	CTRL.Event_Delay(2)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231594") --With his Spearmen now proven in battle, Guillaume and his men moved on.
+	CTRL.WAIT()
+	
+end
+
+-- ///// Horsemen ////////////////////////////////////////////////////
+
+EVENTS.DefeatArchersStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231595") --A group of enemy archers blocked Guillaume’s path. He knew their long range would give them a distinct advantage over his spearmen. As luck would have it, a regiment of his loyal horsemen had been spotted close by.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.DefeatArchersEnd = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231596") --Guillaume once again proved he was a shrewd tactician. He knew his Horsemen had the speed to run down and defeat the much slower archers.
+	CTRL.WAIT()
+	
+end
+
+-- ///// Locate /////////////////////////////////////////////////////
+
+EVENTS.LocateArchersStart = function()
+
+	CTRL.Event_Delay(0.5)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231597") --With his Horsemen now battle hardened, Guillaume focused on locating his own regiment of archers.
+	CTRL.WAIT()
+	
+end
+
+-- ///// Archers ////////////////////////////////////////////////////
+
+EVENTS.AmbushStart = function()
+
+	CTRL.Event_Delay(0.5)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231598") --Guillaume found his archers hidden within a quiet village. They reported that a group of enemy Spearmen were on their way to secure the area. Guillaume noticed the hill nearby and knew it would be a perfect spot for an ambush.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.AmbushEnd = function()
+	
+	Objective_TriggerTitleCard()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231599") --Guillaume’s plan once again proved true. His archers shot down the enemy Spearmen from their advantaged position
+	CTRL.WAIT()
+	
+end
+
+-- ///// PrepareForBattle ///////////////////////////////////////////
+
+EVENTS.SelectEntireArmyStart = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231600") --With his forces now gathered under his command, Guillaume prepared to rendezvous with his ally, King Henri I of France.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.ReachedHenry = function()
+	
+	Objective_TriggerTitleCard()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231602") --Now bolstered by his liege's forces, Guillaume marched to battle.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.ReachedBridge = function()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231603") --The time had finally come. Gui and his rebel army stood in open defiance against the combined forces of Guillaume and King Henri. Guillaume had mastered numerous skills and now it was time to put those skills to use
+	CTRL.WAIT()
+	
+end
+
+-- ///// DefeatGuy //////////////////////////////////////////////////
+
+EVENTS.ReachedBattlefield = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231604") --Henri had granted Guillaume the right to initiate the attack and, on his order, the fight for his dukedom would begin.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.StartedBattle = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231605") --It was during this battle that Guillaume first demonstrated his prowess as a warrior of Viking descent. He single-handedly turned the tide of battle and inspired his men to victory
+	CTRL.WAIT()
+	
+end

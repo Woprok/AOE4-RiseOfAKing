@@ -1,0 +1,152 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp1_rebellion_intro_cameraspline.spline")     
+import("sal_chp1_rebellion.scar")  
+
+sal_chp1_rebellion_intro =  
+{
+	degree = 1,
+	duration = 10.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09750,
+	num_cvs = 2,
+	positions =  
+	{
+		-237.58000,
+		77.82000,
+		-236.22000,
+		-225.74785,
+		57.99252,
+		-224.38475,
+	},
+	rotations =  
+	{
+		-47.27188,
+		-44.99997,
+		-45.00000,
+		-44.99998,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.Rebellion_Intro = function()
+   	
+	--Reveal Fog of War for the Intro camera
+    FOW_UIRevealAll()
+	
+	-- Black Screen
+	Game_FadeToBlack(FADE_IN, 1)
+	Sound_Play2D("sfx_stem_campaign_1047_rebellion_intro_play")
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO, nil, nil, true)
+		
+	-- Ready the Spline
+	Util_AdjustCaptureCameraPanToEndAtDefault(sal_chp1_rebellion_intro)
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp1_rebellion_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    MissionOMatic_ShowTitleCard()
+        WilliamIntroMove()	
+	
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231579") --Before Guillaume could join with his liege’s army, he needed to gather his own men and organise them into fighting order. To do this, he first needed to get a lay of the land
+	    CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	Intro_WilliamResetSpeed()
+	
+	--Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	Sound_Play2D("sfx_stem_campaign_1047_rebellion_intro_stop")
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1047_rebellion_intro_stop")
+		
+		SGroup_FormationWarpToMarker(sg_william, mkr_william_intro_parade_06)
+		Intro_WilliamResetSpeed()
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.RotatingStart = function ()
+	
+	-- this delay creates a bit of space for the sub-objective completion SFX
+	CTRL.Event_Delay(0.25) 
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231580") --A collection of large rocks caught Guillaume’s eye. Wary of any potential hidden threats, he decided to investigate.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.ZoomingStart = function ()
+	
+	-- this delay creates a bit of space for the sub-objective completion SFX
+	CTRL.Event_Delay(0.25)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231581") --Guillaume discovered a recently abandoned camp. He would  need a closer look to determine which direction the men went.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.ResetStart = function ()
+	
+	-- this delay creates a bit of space for the sub-objective completion SFX
+	CTRL.Event_Delay(0.25)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231582") --Happy knowing that his men were nearby, Guillaume refocused his attention.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.MoveStart = function ()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231583") --Guillaume set off in search of his men, scouting the surroundings as he moved
+	CTRL.WAIT()
+	
+end
+
+EVENTS.FollowStart = function ()
+	
+	-- this delay creates a bit of space for the sub-objective completion SFX
+	CTRL.Event_Delay(0.25)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231584") --With each gallop of his horse’s hooves, more of Guillaume’s land was revealed to him.
+	CTRL.WAIT()
+	
+end
+
+EVENTS.MissionEnd = function ()
+	
+	
+	CTRL.Event_Delay(1)
+	CTRL.WAIT()
+
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231585") --Guillaume had found his spearmen. However they would need to be organised and prepared for battle. After which, he could continue searching for the rest of his forces
+	CTRL.WAIT()
+	
+	
+end

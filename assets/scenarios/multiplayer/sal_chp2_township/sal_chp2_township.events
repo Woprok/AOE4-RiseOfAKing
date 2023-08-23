@@ -1,0 +1,146 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp2_township_intro_cameraspline.spline")  
+import("sal_chp2_township.scar")  
+
+sal_chp2_township_intro =  
+{
+	degree = 2,
+	duration = 15.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09749,
+	num_cvs = 3,
+	positions =  
+	{
+		-180.51140,
+		39.73690,
+		-82.90168,
+		-185.10829,
+		45.38892,
+		-119.40452,
+		-160.07426,
+		58.11338,
+		-139.89825,
+	},
+	rotations =  
+	{
+		-43.60534,
+		-79.16329,
+		-44.29761,
+		-62.29049,
+		-45.00000,
+		-44.99999,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.Township_Intro = function()
+   	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Black Screen
+	Game_FadeToBlack(FADE_IN, 1)
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO)
+		
+	-- Ready & Start the Spline
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp2_township_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    MissionOMatic_ShowTitleCard()
+	
+	    -- Wait for title card
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231625") --Mathilde’s small town was now thriving and ready to progress to the next age of prosperity.
+   	    CTRL.WAIT()
+	
+	    CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231626") --To mark the occasion and celebrate her villagers, Mathilde ordered the construction of a Landmark.
+	    CTRL.WAIT()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	-- Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.MissionEnd = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231629") --The town had grown from just a handful of villagers to a fully established settlement. Mathilde had erected a landmark, announcing to the land that this town was a blossoming settlement. It was the perfect platform from which to forge an army and launch a siege on Conan’s castle
+	CTRL.WAIT()
+	
+	--CTRL.Actor_PlaySpeech(ACTOR.NARR, "Mathilde had erected a landmark, announcing to the land that this town was a blossoming settlement.")
+	--CTRL.WAIT()
+	
+	--CTRL.Actor_PlaySpeech(ACTOR.NARR, "It was the perfect platform from which to create an army and launch a siege on Conan’s castle.")
+	--CTRL.WAIT()
+	
+end
+
+-- ///// BuildLandmark //////////////////////////////////////////////
+EVENTS.GatherFoodStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.GatherGoldStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.PlaceLandmark = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231627") --Landmarks allowed a settlement to grow, granting access to more complex buildings and veteran units.
+	CTRL.WAIT()
+	
+end
+EVENTS.Make3VillagersStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+EVENTS.WaitFinishStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end
+
+-- ///// ResearchTech //////////////////////////////////////////////
+EVENTS.HorticultureStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231628") --A new age had begun for the settlement, igniting a spark of inspiration and discovery.
+	CTRL.WAIT()
+	
+end
+EVENTS.BroadAxeStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "")
+	CTRL.WAIT()
+	
+end

@@ -1,0 +1,112 @@
+<DataWarehouse>
+	<!--PrecacheList/-->
+	<DataObject Name="" Type="PrecacheList" Id="4379317451048784883">
+		<DataProperty Name="m_precacheItems" Type="Object">
+			<DataValue Name="SquadPrecacheItem">2419291662954381698</DataValue>
+			<DataValue Name="SquadPrecacheItem">484761548701228213</DataValue>
+			<DataValue Name="SquadPrecacheItem">3549628139173978596</DataValue>
+			<DataValue Name="SquadPrecacheItem">10477878128465519761</DataValue>
+			<DataValue Name="EntityPrecacheItem">11707792465268743524</DataValue>
+			<DataValue Name="EntityPrecacheItem">13379582768956172112</DataValue>
+			<DataValue Name="EntityPrecacheItem">11326969414634596609</DataValue>
+			<DataValue Name="EntityPrecacheItem">14818850324407654346</DataValue>
+			<!--PrecacheList/SquadPrecacheItem/-->
+			<DataObject Name="" Type="SquadPrecacheItem" Id="484761548701228213" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_SquadProperties">8331967382875566842</DataValue>
+					<!--PrecacheList/SquadPrecacheItem/ReflectPBG_SquadProperties/-->
+					<DataObject Name="" Type="ReflectPBG_SquadProperties" Id="8331967382875566842" OwnerId="484761548701228213">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_guyburgundy_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/SquadPrecacheItem/-->
+			<DataObject Name="" Type="SquadPrecacheItem" Id="2419291662954381698" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_SquadProperties">13543410858634583492</DataValue>
+					<!--PrecacheList/SquadPrecacheItem/ReflectPBG_SquadProperties/-->
+					<DataObject Name="" Type="ReflectPBG_SquadProperties" Id="13543410858634583492" OwnerId="2419291662954381698">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_matilda_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/SquadPrecacheItem/-->
+			<DataObject Name="" Type="SquadPrecacheItem" Id="3549628139173978596" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_SquadProperties">12753055070684154581</DataValue>
+					<!--PrecacheList/SquadPrecacheItem/ReflectPBG_SquadProperties/-->
+					<DataObject Name="" Type="ReflectPBG_SquadProperties" Id="12753055070684154581" OwnerId="3549628139173978596">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_king_henry_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/SquadPrecacheItem/-->
+			<DataObject Name="" Type="SquadPrecacheItem" Id="10477878128465519761" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_SquadProperties">11471516718157620599</DataValue>
+					<!--PrecacheList/SquadPrecacheItem/ReflectPBG_SquadProperties/-->
+					<DataObject Name="" Type="ReflectPBG_SquadProperties" Id="11471516718157620599" OwnerId="10477878128465519761">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_matilda_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/EntityPrecacheItem/-->
+			<DataObject Name="" Type="EntityPrecacheItem" Id="11326969414634596609" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_EntityProperties">1353945566435277070</DataValue>
+					<!--PrecacheList/EntityPrecacheItem/ReflectPBG_EntityProperties/-->
+					<DataObject Name="" Type="ReflectPBG_EntityProperties" Id="1353945566435277070" OwnerId="11326969414634596609">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_king_henry_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/EntityPrecacheItem/-->
+			<DataObject Name="" Type="EntityPrecacheItem" Id="11707792465268743524" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_EntityProperties">14597561748606834847</DataValue>
+					<!--PrecacheList/EntityPrecacheItem/ReflectPBG_EntityProperties/-->
+					<DataObject Name="" Type="ReflectPBG_EntityProperties" Id="14597561748606834847" OwnerId="11707792465268743524">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_duke_william_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/EntityPrecacheItem/-->
+			<DataObject Name="" Type="EntityPrecacheItem" Id="13379582768956172112" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_EntityProperties">10421149283795424610</DataValue>
+					<!--PrecacheList/EntityPrecacheItem/ReflectPBG_EntityProperties/-->
+					<DataObject Name="" Type="ReflectPBG_EntityProperties" Id="10421149283795424610" OwnerId="13379582768956172112">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_guyburgundy_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+			<!--PrecacheList/EntityPrecacheItem/-->
+			<DataObject Name="" Type="EntityPrecacheItem" Id="14818850324407654346" OwnerId="4379317451048784883">
+				<DataProperty Name="#BaseTypes" Type="String" Value="IPrecacheItem#0|"/>
+				<DataProperty Name="m_blueprint" Type="Object">
+					<DataValue Name="ReflectPBG_EntityProperties">2460186678535378867</DataValue>
+					<!--PrecacheList/EntityPrecacheItem/ReflectPBG_EntityProperties/-->
+					<DataObject Name="" Type="ReflectPBG_EntityProperties" Id="2460186678535378867" OwnerId="14818850324407654346">
+						<DataProperty Name="#BaseTypes" Type="String" Value="PropertyBagGroupReflectReference#0|Provider_PropertyBagGroup#0|"/>
+						<DataProperty Name="m_fileName" Type="String" Value="unit_matilda_cmp_sal"/>
+					</DataObject>
+				</DataProperty>
+			</DataObject>
+		</DataProperty>
+	</DataObject>
+</DataWarehouse>
+

@@ -1,0 +1,256 @@
+-- Copyright 2022 SEGA Corporation, Developed by Relic Entertainment
+-- import("sal_chp2_womanswork_intro_cameraspline.spline")  
+import("sal_chp2_womanswork.scar")  
+
+sal_chp2_womanswork_intro =  
+{
+	degree = 2,
+	duration = 25.00000,
+	easingMode = 2,
+	easingType = 1397310790,
+	fov = 41.09999,
+	num_cvs = 3,
+	positions =  
+	{
+		-149.87790,
+		28.94964,
+		-252.02919,
+		-150.54738,
+		45.28297,
+		-222.05424,
+		-78.00652,
+		61.61729,
+		-167.27322,
+	},
+	rotations =  
+	{
+		-35.31868,
+		-36.39920,
+		-39.98711,
+		-40.39169,
+		-45.00000,
+		-44.99998,
+	},
+}
+
+EVENTS = {}
+
+EVENTS.WomansWork_Intro = function()
+   	
+	-- Reveal Fog of War
+    FOW_UIRevealAll()
+	
+	-- Black Screen
+	Game_FadeToBlack(FADE_IN, 1)
+	Sound_Play2D("sfx_stem_campaign_1065_brittany_intro_play")	
+	Spawn_Intro()
+	Intro_Villager_Cheer()
+	
+	-- Set 'Cinematic Mode'
+	Game_TransitionToState("intro", 0)
+	Util_EnableCardinalCinematicMode (true, CAM_INTRO, nil, nil, true)
+		
+	-- Ready & Start the Spline
+	Util_AdjustCaptureCameraPanToEndAtDefault(sal_chp2_womanswork_intro)
+	Camera_Push("camera_spline")
+	local time = Camera_ExecuteCaptureCameraPan(sal_chp2_womanswork_intro)
+	
+	-- In-Cinematic Events
+	CTRL.Event_Delay(time)
+	CTRL.SUB()
+	
+	    MissionOMatic_ShowTitleCard()
+	
+	    Intro_Parade()
+	
+	    -- Wait for title card
+	    CTRL.Event_Delay(4)
+		CTRL.WAIT()
+	
+	    Intro_Villagers_Move()
+	
+	    CTRL.Event_Delay(1)
+		CTRL.WAIT()
+	
+		CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231608")
+   		CTRL.WAIT()
+	
+	    CTRL.Event_Delay(2)
+		CTRL.WAIT()
+	
+        Intro_Scout_Move()	
+	
+	    CTRL.Event_Delay(2)
+		CTRL.WAIT()
+	
+	    CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231610")
+   		CTRL.WAIT()
+	
+	    Intro_Destroy_Squads()
+	
+	CTRL.END()
+	CTRL.WAIT()
+	
+	
+	
+	-- Undo 'Cinematic Mode'
+	Camera_Pop()
+	Util_EnableCardinalCinematicMode (false, CAM_INTRO)
+	
+	-- UnReveal Fog of War
+    FOW_PlayerUnExploreAll(player1)
+	FOW_UIUnRevealAll()
+	Sound_Play2D("sfx_stem_campaign_1065_brittany_intro_stop")
+	
+	-- Clean up for skipping
+	if Event_IsBeingSkipped() and intro_skipped == false then
+		
+		Sound_Play2D("sfx_stem_campaign_1065_brittany_intro_stop")
+
+		Intro_Skip()
+		
+		intro_skipped = true
+	end
+
+end
+
+EVENTS.MissionEnd = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231629") -- The town had grown from just a handful of villagers to a fully established settlement. Mathilde had erected a landmark, announcing to the land that this town was a blossoming settlement. It was the perfect platform from which to forge an army and launch a siege on Conan’s castle
+	CTRL.WAIT()
+end
+
+-- ///// VillagersWork //////////////////////////////////////////////
+EVENTS.SelectVillagerStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231611") -- Guillaume entrusted the raising of such an army to his wife, Mathilde de Flandre, Duchess of Normandy. 
+	CTRL.WAIT()
+	
+	CTRL.Event_Delay(1)
+    CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231613") -- First, Mathilde would need to gather resources, a job for her loyal villagers.
+	CTRL.WAIT()
+	
+end
+EVENTS.GatherFoodStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231614") --Resources were used for all manner of construction and production and could be found all across the land. But Mathilde knew the most important resource to begin gathering was food.
+	CTRL.WAIT()
+end
+EVENTS.VillagerQuickStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231615") --Food was key in the recruiting and maintenance of villagers and military units.
+	CTRL.WAIT()
+	
+	CTRL.Event_Delay(0.5)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231620") -- More villagers would be required if she was to raise a large army. To do this, Matilde turned to her Town Centre, an important landmark. It was where new villagers could be recruited.
+	CTRL.WAIT()
+end
+
+EVENTS.BuildMillStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231616") --Villagers could also construct a variety of military and economic buildings. Some of these buildings were used to make resource gathering more efficient, such as the Mill.
+	CTRL.WAIT()
+end
+EVENTS.BuildMillEnd = function()
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231617") --Mathilde ordered construction of the mill close to the berry bushes as an alternative drop off point for her villagers.
+	CTRL.WAIT()
+end
+EVENTS.BuildLumberStart = function()
+
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231618") --Wood was a key resource in the construction of many buildings and was essential to the success of any town. Mathilde constructed a Lumber Camp close to a source of wood.
+	CTRL.WAIT()
+end
+EVENTS.Make5VillagersStart = function()
+	
+end
+EVENTS.BuildHousesStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231621") --The town could no longer grow without additional homes. Mathilde ordered her villagers to construct new houses to accommodate the growing population.
+	CTRL.WAIT()
+	
+end
+EVENTS.BuildMineStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231619") --It was time for Matilde to begin gathering the resource that ruled the known world. Gold. Fortunately, a gold vein could be found nearby and Matilde set her villagers to work mining it.
+	CTRL.WAIT()
+end
+
+-- ///// GrowTown //////////////////////////////////////////////
+EVENTS.BuildFarmsStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231622") --Her food supply had begun running low. Mathilde constructed farms to replace the depleted berry bushes as they provided a constant supply of food.
+	CTRL.WAIT()
+end
+EVENTS.BuildLandmarkStart = function()
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231625") -- Mathilde’s small town was now thriving and ready to progress to the next age of prosperity.
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231626") -- To mark the occasion and celebrate her villagers, Mathilde ordered the construction of a Landmark.
+	CTRL.WAIT()
+end
+EVENTS.BuildLandmarkPlaced = function()
+	CTRL.Event_Delay(0.25) -- brief pause for secondary objective audio sting
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231627") -- Landmarks allowed a settlement to grow, granting access to more complex buildings and veteran units.
+	CTRL.WAIT()
+end
+
+-- ///// CommandOfficials //////////////////////////////////////////////
+EVENTS.SetBalancedStart = function()
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11231623") --Like all great leaders, Mathilde made expert use of her Village Officials. They aided her in organising the villagers, and assigned them roles within the settlement.
+	CTRL.WAIT()
+end
+
+
+-- ///// VO borrowed from PC mission Zero for Scout
+EVENTS.Scout_IntelStart = function() --triggers when need to produce scouts
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11192832")   -- Further growth required knowing the countryside and finding more resources.  (Start Explore the Map)
+	CTRL.WAIT()	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11192833")   -- For that, communities employed scouts. (Start Produce a Scout)
+	CTRL.WAIT()	
+
+end
+
+EVENTS.Scout_IntelUpdate = function() 
+	Objective_TriggerTitleCard()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11192834")   -- Able to move quickly and see great distances, Scouts were key to discovering new resources. (Complete Produce a Scout)
+	CTRL.WAIT()	
+
+end
+
+
+
+EVENTS.Produce5VillagersStart = function() 
+
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11198356")   -- Having accumulated a goodly reserve of food, the village could look to expand. (Complete - Get Food)
+	CTRL.WAIT()
+	
+	CTRL.Actor_PlaySpeech(ACTOR.NARR, "$11192664")   -- To do so, it would need more hands to share the work. (Start Produce 5 villagers)
+	CTRL.WAIT()
+
+end
+
+
